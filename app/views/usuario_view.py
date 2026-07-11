@@ -1,4 +1,4 @@
-class usuario_view:
+class Usuario_Terminal_View:
 
     def mostrar_usuario(self, lista_de_usuarios):
         print("\n--- Lista de Usuários ---")

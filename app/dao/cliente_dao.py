@@ -1,4 +1,4 @@
-class cliente_dao:
+class Cliente_DAO:
     def __init__(self):
         self.cliente = []
         

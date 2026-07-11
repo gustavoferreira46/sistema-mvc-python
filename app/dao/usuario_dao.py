@@ -1,4 +1,4 @@
-class usuario_dao:
+class Usuario_DAO:
     def __init__(self):
         self.usuarios = []
         
