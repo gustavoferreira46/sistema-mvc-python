@@ -52,8 +52,69 @@ class Produto_DAO(DAO):
         return produtos
     
     def get_by_id(self, id):
-        return 1
-    def update(self, objeto):
-        return True
+        conexao = self._database.conectar()
+        cursor = conexao.cursor()
+        sql =   """
+            SELECT
+                ID,
+                NOME,
+                ESTOQUE,
+                PRECO
+            FROM
+                PRODUTO
+            WHERE
+                ID = %s
+                """
+        
+        cursor.execute(sql,(id,))
+        registro = cursor.fetchone()
+        self._database.desconectar(cursor, conexao)
+        if registro is None:
+            return None
+        return Produto(
+            registro[0],
+            registro[1],
+            registro[2],
+            registro[3],
+        )
+
+
+    def update(self, produto):
+        conexao = self._database.conectar()
+        cursor = conexao.cursor()
+        sql =   """
+                    UPDATE PRODUTO SET 
+                        NOME = %s,
+                        ESTOQUE = %s,
+                        PRECO = %s
+                    WHERE 
+                        ID = %s
+                """
+        cursor.execute(sql,(    
+                             
+            produto.nome,
+            produto.estoque,
+            produto.preco,
+            produto.id
+        ))
+        conexao.commit()
+        sucesso = cursor.rowcount > 0
+        self._database.desconectar(cursor, conexao)
+        return sucesso
+    
     def delete(self, id):
-        return True
+        conexao = self._database.conectar()
+        cursor = conexao.cursor()
+        sql =   """
+                    DELETE FROM PRODUTO  
+                        WHERE 
+                        ID = %s
+                """
+        cursor.execute(sql,(id,))
+        conexao.commit()
+        sucesso = cursor.rowcount > 0
+        self._database.desconectar(cursor, conexao)
+        return sucesso
+
+
+       
