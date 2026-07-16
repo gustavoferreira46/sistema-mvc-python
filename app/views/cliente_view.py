@@ -1,3 +1,7 @@
+from colorama import init, Fore, Style
+
+init(autoreset=True)
+
 class Cliente_Terminal_View:
     def __init__(self):
         self.titulo_sistema = "=== CRUD DE CLIENTES (MVC) ==="
@@ -33,7 +37,7 @@ class Cliente_Terminal_View:
         print(f"{'ID':<4} | {'NOME':<20} | {'DATA DE NASCIMENTO':<20} | {'LIMITE DE CRÉDITO':<10}")
         print("-"*73)
         for c in clientes:
-            print(f"{c.id:<4} | {c.nome:<20} | {c.data_nascimento:<20} | {c.idade: <6} | {c.limite_credito:<10.2f}")
+            print(f"{c.id:<4} | {c.nome:<20} | {(c.data_nascimento):<20} | {c.idade: <6} | {c.limite_credito:<10.2f}")
         print("-"*73)
     
     def exibir_mensagem(self, mensagem, sucesso=True):

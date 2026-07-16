@@ -1,3 +1,8 @@
+
+import email
+import os
+from app.models.cliente import Cliente
+
 class Cliente_Controller:
     def __init__(self, dao, view):
         self.dao = dao
@@ -12,7 +17,7 @@ class Cliente_Controller:
             elif opcao == 1:
                 try:
                     nome, data_nascimento, limite_credito = self.view.ler_dados_cliente()
-                    cliente = Cliente(None,nome, data_nascimento, limite_credito)
+                    cliente = Cliente(None,nome, email, data_nascimento, limite_credito)
                     self.dao.save(cliente)
                     self.view.exibir_mensagem("Cliente cadastrado com sucesso!")
                 except ValueError:
