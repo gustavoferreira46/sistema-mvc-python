@@ -1,9 +1,11 @@
 from app.dao.dao import DAO
 from app.models.cliente import Cliente
+
+
 class Cliente_DAO:
     def __init__(self, database):
         self._database = database
-        
+
     def save(self, cliente):
         conexao = self._database.conectar()
         cursor = conexao.cursor()
@@ -12,7 +14,7 @@ class Cliente_DAO:
                 (NOME, EMAIL, DATA_NASCIMENTO, LIMITE_CREDITO)
                 VALUES (%s, %s, %s, %s)
                 """
-        cursor.execute(sql,(
+        cursor.execute(sql, (
             cliente.nome,
             cliente.email,
             cliente.data_nascimento,
@@ -22,8 +24,6 @@ class Cliente_DAO:
         cliente.id = cursor.lastrowid
         self._database.desconectar(cursor, conexao)
         return cliente
-
-        
 
     def get_all(self):
         conexao = self._database.conectar()
@@ -42,9 +42,9 @@ class Cliente_DAO:
                 """
         cursor.execute(sql)
         registros = cursor.fetchall()
-        produtos = []
+        clientes = []
         for registro in registros:
-            produtos.append(
+            clientes.append(
                 Cliente(
                     registro[0],
                     registro[1],
@@ -54,8 +54,8 @@ class Cliente_DAO:
                 )
             )
         self._database.desconectar(cursor, conexao)
-        return cliente
-    
+        return clientes
+
     def get_by_id(self, id):
         conexao = self._database.conectar()
         cursor = conexao.cursor()
@@ -71,19 +71,19 @@ class Cliente_DAO:
                 WHERE
                     ID = %s
                 """
-        cursor.execute(sql,(id))
+        cursor.execute(sql, (id,))
         registro = cursor.fetchone()
         self._database.desconectar(cursor, conexao)
         if registro is None:
             return None
-        return produto(
-                    registro[0],
-                    registro[1],
-                    registro[2],
-                    registro[3],
-                    registro[4]
+        return Cliente(
+            registro[0],
+            registro[1],
+            registro[2],
+            registro[3],
+            registro[4]
         )
-    
+
     def update(self, cliente):
         conexao = self._database.conectar()
         cursor = conexao.cursor()
@@ -96,8 +96,7 @@ class Cliente_DAO:
                     WHERE 
                         ID = %s
                 """
-        cursor.execute(sql,(
-
+        cursor.execute(sql, (
             cliente.nome,
             cliente.email,
             cliente.data_nascimento,
@@ -108,7 +107,7 @@ class Cliente_DAO:
         sucesso = cursor.rowcount > 0
         self._database.desconectar(cursor, conexao)
         return sucesso
-    
+
     def delete(self, id):
         conexao = self._database.conectar()
         cursor = conexao.cursor()
@@ -117,11 +116,8 @@ class Cliente_DAO:
                     WHERE 
                         ID = %s
                 """
-        cursor.execute(sql,(id))
+        cursor.execute(sql, (id,))
         conexao.commit()
         sucesso = cursor.rowcount > 0
         self._database.desconectar(cursor, conexao)
         return sucesso
-
-        
-
