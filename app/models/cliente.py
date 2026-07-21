@@ -13,6 +13,10 @@ class Cliente:
     def id(self):
         return self._id
 
+    @id.setter
+    def id(self, novo_id):
+        self._id = novo_id
+
     @property
     def nome(self):
         return self._nome

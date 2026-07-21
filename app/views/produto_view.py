@@ -12,7 +12,7 @@ class Produto_Terminal_View:
         print(f"2 - Listar Produtos")
         print(f"3 - Atualizar Produto")
         print(f"4 - Deletar Produto")
-        print(f"5 - Sair")
+        print(f"0 - Sair")
         print(Fore.CYAN + "="*50)
         try:
             return int(input("Escolha uma opção: "))
