@@ -1,5 +1,7 @@
+from app.models.fornecedor import Fornecedor
+
 class Produto:
-    def __init__(self, id_produto, nome, estoque, preco):
+    def __init__(self, id_produto, nome, estoque, preco, fornecedor:Fornecedor):
         self._id = id_produto  
         self._nome = nome  
         self._estoque = estoque
