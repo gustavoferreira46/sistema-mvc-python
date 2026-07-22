@@ -1,9 +1,9 @@
 from app.dao.dao import DAO
 from app.models.produto import Produto
 class Produto_DAO(DAO):
-    def __init__(self, database):
+    def __init__(self, database, fornecedor_dao):
         super().__init__(database)
-        
+        self._fornecedor_dao = fornecedor_dao
 
     def save(self, produto):
         conexao, cursor = self.conectar()

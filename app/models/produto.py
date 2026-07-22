@@ -6,7 +6,7 @@ class Produto:
         self._nome = nome  
         self._estoque = estoque
         self._preco = preco
-        
+        self._fornecedor = fornecedor
     @property
     def id(self):
         return self._id  
@@ -42,8 +42,16 @@ class Produto:
     @property
     def valor_estoque(self):
         return self._estoque * self._preco
+    
+    @property
+    def Fornecedor(self):
+        return self._fornecedor 
+    
+    @Fornecedor.setter
+    def fornecedor(self, novo_fornecedor):
+        self._fornecedor = novo_fornecedor
 
-    def atualizar_dados(self, novo_nome, novo_estoque, novo_preco):
+    def atualizar_dados(self, novo_nome, novo_estoque, novo_preco, novo_fornecedor):
         if novo_preco < 0:
             raise ValueError("O preço não pode ser negativo.")
         if novo_estoque < 0:
@@ -51,6 +59,7 @@ class Produto:
         self._nome = novo_nome
         self._estoque = novo_estoque
         self._preco = novo_preco
+        self._fornecedor = novo_fornecedor
 
 # --- Testando a Classe ---
 p1 = Produto(1, "playstation", 10, 2500.00)
