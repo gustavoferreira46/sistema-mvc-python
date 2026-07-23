@@ -2,14 +2,26 @@ import os
 from app.models.produto import Produto
 
 class Produto_Controller:
-    def __init__(self, dao, view):
+    def __init__(self, dao, fornecedor_dao, view):
         self.dao = dao
         self.view = view
-    
+        self._fornecedor_dao = fornecedor_dao
     def save(self):
         try:
+            fornecedores = sef._fornecedor_dao.get_all()
+            if not fornecedores:
+                self.view.exibir_mensagem("Cadastro fornecedores antes de cadastrar produtos", False)
+                return
+            self.view.exibir_fornecedores(fornecedores)
+            id_fornecedor = self._view.ler_fornecedor()
+            fornecedores = self._fornecedor_dao.get_by_id(id_fornecedor)
+
+            if fornecedor is None:
+                self.view.exibir_mensagem("Fornecedor nao encontrado.", False)
+                return
+
             nome, estoque, preco = self.view.ler_dados_produto()
-            produto = Produto(None,nome, estoque, preco)
+            produto = Produto(None,nome, estoque, preco, fornecedor)
             self.dao.save(produto)
             self.view.exibir_mensagem("Produto cadastrado com sucesso!")
         except ValueError:

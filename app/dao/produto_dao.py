@@ -11,12 +11,13 @@ class Produto_DAO(DAO):
             sql = """
                 INSERT INTO PRODUTO
                     (NOME, ESTOQUE, PRECO)
-                    VALUES (%s, %s, %s)
+                    VALUES (%s, %s, %s, %s)
             """
             cursor.execute(sql, (
                 produto.nome,
                 produto.estoque,
-                produto.preco
+                produto.preco,
+                produto.fornecedor.id
             ))
             conexao.commit()
             produto.id = cursor.lastrowid
@@ -37,7 +38,8 @@ class Produto_DAO(DAO):
                         ID,
                         NOME,
                         ESTOQUE,
-                        PRECO
+                        PRECO,
+                        FORNECEDOR_ID
                     FROM
                         PRODUTO
                     ORDER BY 
@@ -47,12 +49,14 @@ class Produto_DAO(DAO):
             registros = cursor.fetchall()
             produtos = []
             for registro in registros:
-                produtos.append(
+                fornecedor = self._fornecedor_dao.get_by_id(registro[4])
+            produtos.append(
                     Produto(
                         registro[0],
                         registro[1],
                         registro[2],
-                        registro[3]
+                        registro[3],
+                        fornecedor
                     )
                 )
             self._database.desconectar(cursor, conexao)
@@ -72,6 +76,7 @@ class Produto_DAO(DAO):
                     NOME,
                     ESTOQUE,
                     PRECO
+                    FORNECEDOR_ID
                 FROM
                     PRODUTO
                 WHERE
@@ -80,6 +85,7 @@ class Produto_DAO(DAO):
             
             cursor.execute(sql,(id,))
             registro = cursor.fetchone()
+            fornecedor = self._fornecedor_dao.get.by.id(registro[4])
             self._database.desconectar(cursor, conexao)
             if registro is None:
                 return None
@@ -88,6 +94,7 @@ class Produto_DAO(DAO):
                 registro[1],
                 registro[2],
                 registro[3],
+                fornecedor
             )
         except Exception as e:
             raise e
@@ -99,9 +106,10 @@ class Produto_DAO(DAO):
         try:
             sql =   """
                         UPDATE PRODUTO SET 
-                            NOME = %s,
-                            ESTOQUE = %s,
-                            PRECO = %s
+                            NOME                = %s,
+                            ESTOQUE             = %s,
+                            PRECO               = %s
+                            FORNECEDOR_ID       = %s
                         WHERE 
                             ID = %s
                     """
@@ -110,6 +118,7 @@ class Produto_DAO(DAO):
                 produto.nome,
                 produto.estoque,
                 produto.preco,
+                produto.fornecedor.id,
                 produto.id
             ))
             conexao.commit()
