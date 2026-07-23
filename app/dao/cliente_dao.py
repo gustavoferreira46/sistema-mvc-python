@@ -1,21 +1,24 @@
 from app.dao.dao import DAO
 from app.models.cliente import Cliente
+
 class Cliente_DAO(DAO):
-    def __init__(self, database):
+    def __init__(self, database, cidade_dao):
         super().__init__(database)
+        self._cidade_dao = cidade_dao
 
     def save(self, cliente):
         conexao, cursor = self.conectar()
         try:
-            sql =   """
+            sql = """
                         INSERT INTO CLIENTE
-                        (NOME, DATA_NASCIMENTO, LIMITE_CREDITO)
-                        VALUES (%s, %s, %s)
+                        (NOME, DATA_NASCIMENTO, LIMITE_CREDITO, CIDADE_ID)
+                        VALUES (%s, %s, %s, %s)
                     """
             cursor.execute(sql, (
                 cliente.nome,
                 cliente.data_nascimento,
-                cliente.limite_credito
+                cliente.limite_credito,
+                cliente.cidade.id
             ))
             conexao.commit()
             cliente.id = cursor.lastrowid
@@ -29,12 +32,13 @@ class Cliente_DAO(DAO):
     def get_all(self):
         conexao, cursor = self.conectar()
         try:
-            sql =   """
+            sql = """
                         SELECT
                             ID,
                             NOME,
                             DATA_NASCIMENTO,
-                            LIMITE_CREDITO
+                            LIMITE_CREDITO,
+                            CIDADE_ID
                         FROM
                             CLIENTE
                         ORDER BY 
@@ -44,13 +48,15 @@ class Cliente_DAO(DAO):
             registros = cursor.fetchall()
             clientes = []
             for registro in registros:
+                cidade = self._cidade_dao.get_by_id(registro[4])
                 clientes.append(
                     Cliente(
                         registro[0],
                         registro[1],
                         None,
                         registro[2],
-                        registro[3]
+                        registro[3],
+                        cidade
                     )
                 )
             return clientes
@@ -62,27 +68,31 @@ class Cliente_DAO(DAO):
     def get_by_id(self, id):
         conexao, cursor = self.conectar()
         try:
-            sql =   """
+            sql = """
                         SELECT
                             ID,
                             NOME,
                             DATA_NASCIMENTO,
-                            LIMITE_CREDITO
+                            LIMITE_CREDITO,
+                            CIDADE_ID
                         FROM
                             CLIENTE
                         WHERE
                             ID = %s
-                    """        
-            cursor.execute(sql,(id,))
+                    """
+            cursor.execute(sql, (id,))
             registro = cursor.fetchone()
             if registro is None:
                 return None
+
+            cidade = self._cidade_dao.get_by_id(registro[4])
             return Cliente(
                 registro[0],
                 registro[1],
                 None,
                 registro[2],
-                registro[3]
+                registro[3],
+                cidade
             )
         except Exception as e:
             raise e
@@ -92,19 +102,21 @@ class Cliente_DAO(DAO):
     def update(self, cliente):
         conexao, cursor = self.conectar()
         try:
-            sql =   """
+            sql = """
                         UPDATE CLIENTE SET
                             NOME             = %s,
-                            DATA_NASCIMENTO = %s,
-                            LIMITE_CREDITO   = %s
+                            DATA_NASCIMENTO  = %s,
+                            LIMITE_CREDITO   = %s,
+                            CIDADE_ID        = %s
                         WHERE
                             ID = %s
                     """
-            cursor.execute(sql,(
-                                    cliente.nome,
-                                    cliente.data_nascimento,
-                                    cliente.limite_credito,
-                                    cliente.id
+            cursor.execute(sql, (
+                cliente.nome,
+                cliente.data_nascimento,
+                cliente.limite_credito,
+                cliente.cidade.id,
+                cliente.id
             ))
             conexao.commit()
             sucesso = cursor.rowcount > 0
@@ -118,11 +130,11 @@ class Cliente_DAO(DAO):
     def delete(self, id):
         conexao, cursor = self.conectar()
         try:
-            sql =   """
+            sql = """
                         DELETE FROM CLIENTE
                         WHERE ID = %s
                     """
-            cursor.execute(sql,(id,))
+            cursor.execute(sql, (id,))
             conexao.commit()
             sucesso = cursor.rowcount > 0
             return sucesso

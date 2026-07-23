@@ -2,12 +2,13 @@ from app.core.data_utils import Data_Utils
 
 class Cliente:
 
-    def __init__(self, id, nome, email, data_nascimento, limite_credito):
+    def __init__(self, id, nome, email, data_nascimento, limite_credito, cidade:Cidade):
         self._id = id
         self._nome = nome
         self._email = email
         self._data_nascimento = data_nascimento
         self._limite_credito = limite_credito
+        self._cidade = cidade
 
     @property
     def id(self):
@@ -52,11 +53,21 @@ class Cliente:
     @property
     def idade(self):
         return Data_Utils.calcular_idade(self._data_nascimento)
+    
+    @property
+    def cidade(self):
+        return self._cidade 
+    
+    @Cidade.setter
+    def fornecedor(self, nova_cidade):
+        self._cidade = nova_cidade
+
 
     def atualizar_dados(self, novo_nome, nova_data_nascimento, novo_limite_credito):
         self._nome = novo_nome
         self._data_nascimento = nova_data_nascimento
         self._limite_credito = novo_limite_credito
+        self._cidade = nova_cidade
 
     def validar_limite_credito(self, limite_credito):
         if limite_credito < 0:

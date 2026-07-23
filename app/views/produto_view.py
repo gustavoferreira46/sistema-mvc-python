@@ -35,7 +35,7 @@ class Produto_Terminal_View:
         print("-"* 40)
         for fornecedores in fornecedores:
             print(
-                f"{fornecedor.id:<4} | {fornecedor.nome_fantasia:<30}"
+                f"{fornecedores.id:<4} | {fornecedores.nome_fantasia:<30}"
             )
         print("-"* 40)
 
@@ -54,11 +54,11 @@ class Produto_Terminal_View:
         if not produtos:
             print("Nenhum produto cadastrado.")
             return
-        print(f"{'ID' :<5} | {'NOME' :<20} | {'ESTOQUE' :<7} | {'PREÇO' :<10} {'VALOR EM ESTOQUE':<16}")
-        print("-"*69)
+        print(f"{'ID' :<5} | {'NOME' :<20} | {'ESTOQUE' :<7} | {'PREÇO' :<10} {'VALOR EM ESTOQUE':<16} | {'FORNECEDOR':<30}")
+        print("-"* 82)
         for p in produtos:
-            print(f"{p.id :<5} | {p.nome :<20} | {p.estoque :<7} | {p.preco :<10.2f} {p.valor_estoque :<16.2f}")
-        print("-"*69)
+            print(f"{p.id :<5} | {p.nome :<20} | {p.estoque :<7} | {p.preco :<10.2f} {p.valor_estoque :<16.2f} | {p.fornecedor.nome_fantasia :<30}")
+        print("-"* 82)
         self.aguardar_entrada()
         
 

@@ -61,12 +61,3 @@ class Produto:
         self._preco = novo_preco
         self._fornecedor = novo_fornecedor
 
-# --- Testando a Classe ---
-p1 = Produto(1, "playstation", 10, 2500.00)
-    
-print(p1.nome)         
-p1.nome = "Playstation 5 PRO"
-print(p1.nome)         
-
-
-print(f"ID do Produto: {p1.id}")
